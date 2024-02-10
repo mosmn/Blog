@@ -2,9 +2,10 @@
   "name": "blog",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "start": "nodemon --exec babel-node src/index.js",
+    "pretty": "prettier --write .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -25,6 +26,8 @@
     "express": "^4.18.2",
     "js": "^0.1.0",
     "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.3.0",
+    "mongoose": "^8.1.1",
     "uuid": "^9.0.1"
   },
   "Transform": "AWS::Serverless-2016-10-31",
