@@ -19,13 +19,10 @@ const commentSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  likes: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      default: [],
-    },
-  ],
+  likesCount: {
+    type: Number,
+    default: 0,
+  },
   replies: [
     {
       type: mongoose.Schema.Types.ObjectId,
