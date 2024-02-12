@@ -5,15 +5,15 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const logger = require("morgan");
-const passport = require('passport');
+const passport = require("passport");
 const compression = require("compression");
 const helmet = require("helmet");
 const RateLimit = require("express-rate-limit");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
-const authRoutes = require('./routes/auth');
-const blogRoutes = require('./routes/blog');
+const authRoutes = require("./routes/auth");
+const blogRoutes = require("./routes/blog");
 
 const app = express();
 const mongoDB = process.env.MONGODB_URI;
@@ -27,31 +27,32 @@ app.use(passport.session());
 app.use(logger("dev"));
 app.use(compression());
 app.use(express.static(path.join(__dirname, "public")));
+require("./config/passport")(passport);
 
 app.use(
-    helmet.contentSecurityPolicy({
-        directives: {
-            "script-src": ["'self'", "code.jquery.com", "cdn.jsdelivr.net"],
-        },
-    }),
+  helmet.contentSecurityPolicy({
+    directives: {
+      "script-src": ["'self'", "code.jquery.com", "cdn.jsdelivr.net"],
+    },
+  }),
 );
 
 const limiter = RateLimit({
-    windowMs: 1 * 60 * 1000, // 1 minute
-    max: 20,
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 20,
 });
 app.use(limiter);
 
 async function main() {
-    await mongoose.connect(mongoDB);
-    console.log("Connected to MongoDB");
+  await mongoose.connect(mongoDB);
+  console.log("Connected to MongoDB");
 }
 mongoose.set("strictQuery", false);
 main().catch((err) => console.log(err));
 
-app.use('/auth', authRoutes);
-app.use('/blog', blogRoutes);
+app.use("/auth", authRoutes);
+app.use("/blog", blogRoutes);
 
 app.listen(process.env.PORT, () =>
-    console.log(`Example app listening on port ${process.env.PORT}!`),
+  console.log(`Example app listening on port ${process.env.PORT}!`),
 );
