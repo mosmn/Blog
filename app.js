@@ -10,6 +10,7 @@ const compression = require("compression");
 const helmet = require("helmet");
 const RateLimit = require("express-rate-limit");
 const mongoose = require("mongoose");
+const cors = require('cors');
 require("dotenv").config();
 
 const authRoutes = require("./routes/auth");
@@ -28,6 +29,9 @@ app.use(logger("dev"));
 app.use(compression());
 app.use(express.static(path.join(__dirname, "public")));
 require("./config/passport")(passport);
+app.use(cors({
+    origin: 'http://localhost:5173'
+  }));
 
 app.use(
   helmet.contentSecurityPolicy({
