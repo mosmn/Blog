@@ -13,12 +13,12 @@ exports.getPost = asyncHandler(async (req, res) => {
 });
 
 exports.createPost = asyncHandler(async (req, res) => {
-  const { title, content } = req.body;
+  const { title, content, published } = req.body;
   if (req.user.type !== "admin") {
     return res.status(403).json({ message: "Only admins can create posts" });
   }
 
-  const post = new Post({ title, content, author: req.user._id });
+  const post = new Post({ title, content, published, author: req.user._id });
   await post.save();
   res.status(201).json(post);
 });
