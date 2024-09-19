@@ -53,7 +53,7 @@ app.use("/auth", authRoutes);
 app.use("/blog", blogRoutes);
 
 // Conditionally start the server if the ENVIRONMENT is 'development'
-if (process.env.ENVIRONMENT === "devlopment") {
+if (process.env.ENVIRONMENT === "development") {
   const port = process.env.PORT || 8080;
   app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
