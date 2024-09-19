@@ -1,5 +1,4 @@
 /* eslint-disable new-cap */
-/* eslint-disable require-jsdoc */
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
@@ -9,21 +8,18 @@ const passport = require("passport");
 const compression = require("compression");
 const helmet = require("helmet");
 const RateLimit = require("express-rate-limit");
-const cors = require('cors');
+const cors = require("cors");
 require("dotenv").config();
 const { main } = require("./mongoConfig");
-const bodyParser = require('body-parser');
-
+const bodyParser = require("body-parser");
 
 const authRoutes = require("./routes/auth");
 const blogRoutes = require("./routes/blog");
 
 const app = express();
-// Increase the limit for JSON payloads
-app.use(bodyParser.json({ limit: '16mb' })); // Adjust the limit as needed
 
-// Increase the limit for URL-encoded payloads
-app.use(bodyParser.urlencoded({ limit: '16mb', extended: true })); // Adjust the limit as needed
+app.use(bodyParser.json({ limit: "16mb" }));
+app.use(bodyParser.urlencoded({ limit: "16mb", extended: true }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -36,11 +32,6 @@ app.use(compression());
 app.use(express.static(path.join(__dirname, "public")));
 require("./config/passport")(passport);
 app.use(cors());
-// app.use(cors({
-//   origin: 'http://localhost:5173',
-//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-//   allowedHeaders: ['Content-Type', 'Authorization']
-// }));
 
 app.use(
   helmet.contentSecurityPolicy({
@@ -61,11 +52,14 @@ main().catch((err) => console.log(err));
 app.use("/auth", authRoutes);
 app.use("/blog", blogRoutes);
 
-const port = process.env.PORT || 8080;
-
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+// Conditionally start the server if the ENVIRONMENT is 'development'
+if (process.env.ENVIRONMENT === "devlopment") {
+  const port = process.env.PORT || 8080;
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+  });
+} else {
+  console.log("Running in a serverless environment, no need for app.listen()");
 }
-);
 
 module.exports = app;
