@@ -2,6 +2,11 @@
 
 This is a RESTful API for a blogging platform. It allows users to create, read, update, and delete blog posts. Users can also like and unlike posts, and add, delete, like, and unlike comments.
 
+This project serves as the backend for two frontend applications:
+
+1. **Blog Admin**: An administrative interface where all the posts can be created, updated, and deleted by the admin.
+2. **Portfolio**: A public-facing site where users can read and engage with the blog posts.
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
@@ -16,7 +21,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 1. Clone the repository:
 ```sh
-git clone https://github.com/yourusername/blog-api.git
+git clone https://github.com/mosmn/blog-api.git
 ```
 
 2. Install the dependencies:
@@ -35,6 +40,23 @@ JWT_SECRET=your_jwt_secret
 ```sh
 npm start
 ```
+
+## API Endpoints
+
+All routes are prefixed with `/blog`.
+
+- `GET /posts`: Get all posts.
+- `GET /posts/:id`: Get a specific post.
+- `POST /posts`: Create a new post. Requires admin privileges.
+- `PUT /posts/:id`: Update a specific post. Requires admin privileges.
+- `DELETE /posts/:id`: Delete a specific post. Requires admin privileges.
+- `PATCH /posts/:id/like`: Like a specific post.
+- `PATCH /posts/:id/unlike`: Unlike a specific post.
+- `GET /posts/:id/comments`: Get all comments for a specific post.
+- `POST /posts/:id/comments`: Add a comment to a specific post.
+- `DELETE /posts/:id/comments/:commentId`: Delete a specific comment. Requires the user to be the author of the comment or an admin.
+- `PATCH /comments/:id/like`: Like a specific comment.
+- `PATCH /comments/:id/unlike`: Unlike a specific comment.
 
 ## Built With
 

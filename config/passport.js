@@ -15,6 +15,7 @@ module.exports = (passport) => {
           if (user) {
             return done(null, user);
           }
+          console.log("No user found");
           return done(null, false);
         })
         .catch((err) => console.log(err));

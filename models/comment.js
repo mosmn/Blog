@@ -23,13 +23,11 @@ const commentSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  replies: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Comment",
-      default: [],
-    },
-  ],
+  replyTo: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Comment",
+    default: null,
+  },
 });
 
 const Comment = mongoose.model("Comment", commentSchema);

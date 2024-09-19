@@ -9,15 +9,21 @@ const passport = require("passport");
 const compression = require("compression");
 const helmet = require("helmet");
 const RateLimit = require("express-rate-limit");
-const mongoose = require("mongoose");
 const cors = require('cors');
 require("dotenv").config();
+const { main } = require("./mongoConfig");
+const bodyParser = require('body-parser');
+
 
 const authRoutes = require("./routes/auth");
 const blogRoutes = require("./routes/blog");
 
 const app = express();
-const mongoDB = process.env.MONGODB_URI;
+// Increase the limit for JSON payloads
+app.use(bodyParser.json({ limit: '16mb' })); // Adjust the limit as needed
+
+// Increase the limit for URL-encoded payloads
+app.use(bodyParser.urlencoded({ limit: '16mb', extended: true })); // Adjust the limit as needed
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -29,9 +35,12 @@ app.use(logger("dev"));
 app.use(compression());
 app.use(express.static(path.join(__dirname, "public")));
 require("./config/passport")(passport);
-app.use(cors({
-    origin: 'http://localhost:5173'
-  }));
+app.use(cors());
+// app.use(cors({
+//   origin: 'http://localhost:5173',
+//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+//   allowedHeaders: ['Content-Type', 'Authorization']
+// }));
 
 app.use(
   helmet.contentSecurityPolicy({
@@ -47,16 +56,16 @@ const limiter = RateLimit({
 });
 app.use(limiter);
 
-async function main() {
-  await mongoose.connect(mongoDB);
-  console.log("Connected to MongoDB");
-}
-mongoose.set("strictQuery", false);
 main().catch((err) => console.log(err));
 
 app.use("/auth", authRoutes);
 app.use("/blog", blogRoutes);
 
-app.listen(process.env.PORT, () =>
-  console.log(`Example app listening on port ${process.env.PORT}!`),
+const port = process.env.PORT || 8080;
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+}
 );
+
+module.exports = app;

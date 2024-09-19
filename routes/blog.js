@@ -6,6 +6,8 @@ const blogController = require("../controllers/blogController");
 
 router.get("/posts", blogController.getAllPosts);
 
+router.get("/posts/published", blogController.getPublishedPosts);
+
 router.get("/posts/:id", blogController.getPost);
 
 router.post(
@@ -39,6 +41,7 @@ router.patch(
 );
 
 router.get("/posts/:id/comments", blogController.getComments);
+router.get("/posts/:id/comments/:commentId/replies", blogController.getReplies);
 
 router.post(
   "/posts/:id/comments",
@@ -50,6 +53,12 @@ router.delete(
   "/posts/:id/comments/:commentId",
   passport.authenticate("jwt", { session: false }),
   blogController.deleteComment,
+);
+
+router.post(
+  "/posts/:id/comments/:commentId/reply",
+  passport.authenticate("jwt", { session: false }),
+  blogController.addReply,
 );
 
 router.patch(

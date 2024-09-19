@@ -4,9 +4,10 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon --exec babel-node app.js",
+    "start": "node app.js",
+    "dev": "nodemon --exec babel-node app.js",
     "pretty": "prettier --write .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest ./tests --watchAll"
   },
   "author": "",
   "license": "ISC",
@@ -17,11 +18,15 @@
     "eslint": "^8.56.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^9.1.0",
+    "jest": "^29.7.0",
+    "mongodb-memory-server": "^9.1.6",
     "nodemon": "^3.0.3",
-    "prettier": "3.2.5"
+    "prettier": "3.2.5",
+    "supertest": "^6.3.4"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -41,86 +46,7 @@
     "passport-local": "^1.0.0",
     "uuid": "^9.0.1"
   },
-  "Transform": "AWS::Serverless-2016-10-31",
-  "Resources": {
-    "Api": {
-      "Type": "AWS::Serverless::Api",
-      "Properties": {
-        "Name": {
-          "Fn::Sub": [
-            "${ResourceName} From Stack ${AWS::StackName}",
-            {
-              "ResourceName": "Api"
-            }
-          ]
-        },
-        "StageName": "Prod",
-        "DefinitionBody": {
-          "openapi": "3.0",
-          "info": {},
-          "paths": {
-            "/": {
-              "get": {
-                "responses": {}
-              }
-            }
-          }
-        },
-        "EndpointConfiguration": "REGIONAL",
-        "TracingEnabled": true
-      }
-    },
-    "Function": {
-      "Type": "AWS::Serverless::Function",
-      "Properties": {
-        "Description": {
-          "Fn::Sub": [
-            "Stack ${AWS::StackName} Function ${ResourceName}",
-            {
-              "ResourceName": "Function"
-            }
-          ]
-        },
-        "CodeUri": "src/Function",
-        "Handler": "index.handler",
-        "Runtime": "nodejs20.x",
-        "MemorySize": 3008,
-        "Timeout": 30,
-        "Tracing": "Active",
-        "Environment": {
-          "Variables": {
-            "API_API_URL": {
-              "Fn::Sub": "https://${Api}.execute-api.${AWS::Region}.amazonaws.com/${Api.Stage}"
-            }
-          }
-        },
-        "Policies": [
-          {
-            "Statement": [
-              {
-                "Effect": "Allow",
-                "Action": [
-                  "execute-api:Invoke"
-                ],
-                "Resource": [
-                  {
-                    "Fn::Sub": "arn:${AWS::Partition}:execute-api:${AWS::Region}:${AWS::AccountId}:${Api}/${Api.Stage}/*"
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    },
-    "FunctionLogGroup": {
-      "Type": "AWS::Logs::LogGroup",
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "LogGroupName": {
-          "Fn::Sub": "/aws/lambda/${Function}"
-        }
-      }
-    }
+  "engines": {
+    "node": "20.x"
   }
 }

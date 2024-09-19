@@ -27,5 +27,24 @@ exports.login = async (req, res) => {
   const payload = { id: user.id, username: user.username, type: user.type };
   const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "24h" });
 
+  console.log("token", token);
+
   res.json({ token , payload });
 };
+
+exports.fetchUserDetails = asyncHandler(async (req, res) => {
+  const token = req.headers.authorization.split(" ")[1];
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  const user = await User.findById(decoded.id).select("_id username type");
+  const userObj = {
+    id: user._id,
+    username: user.username,
+    type: user.type,
+  };
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  res.json(userObj);
+});
