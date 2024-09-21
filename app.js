@@ -31,7 +31,19 @@ app.use(logger("dev"));
 app.use(compression());
 app.use(express.static(path.join(__dirname, "public")));
 require("./config/passport")(passport);
-app.use(cors());
+
+// Updated CORS configuration
+app.use(
+  cors({
+    origin: [
+      "https://mosmn.me",
+      "https://www.mosmn.me",
+      "https://admin.mosmn.me",
+      /^https:\/\/.*\.mosmn\.me$/,
+    ],
+    optionsSuccessStatus: 200,
+  }),
+);
 
 app.use(
   helmet.contentSecurityPolicy({
